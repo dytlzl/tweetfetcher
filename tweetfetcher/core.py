@@ -58,7 +58,7 @@ class GenericFetcher:
                 print(' Done')
                 return
         if 'min_position' in res_json:
-            time.sleep(random.uniform(0.2, 1.4))
+            time.sleep(random.uniform(0.2, 0.8))
             if self.params['max_position'] == res_json['min_position']:
                 return
             self.params['max_position'] = res_json['min_position']
