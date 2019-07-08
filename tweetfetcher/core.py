@@ -38,21 +38,25 @@ class GenericFetcher:
         soup = BeautifulSoup(res_json['items_html'], 'html.parser')
         items = soup.select('.js-stream-item')
         for item in items:
-            self.tweets.append(
-                Tweet(
-                    item.get('data-item-id'),
-                    item.select_one('.fullname').get_text(),
-                    item.select_one('.username').get_text(),
-                    item.select_one('.tweet-timestamp')['title'],
-                    int(item.select_one('._timestamp')['data-time']),
-                    item.select_one('.js-tweet-text-container').get_text(),
-                    [
-                        int(item.select('.ProfileTweet-actionCount')[0]['data-tweet-stat-count']),
-                        int(item.select('.ProfileTweet-actionCount')[1]['data-tweet-stat-count']),
-                        int(item.select('.ProfileTweet-actionCount')[2]['data-tweet-stat-count'])
-                    ],
+            try:
+                self.tweets.append(
+                    Tweet(
+                        item.get('data-item-id'),
+                        item.select_one('.fullname').get_text(),
+                        item.select_one('.username').get_text(),
+                        item.select_one('.tweet-timestamp')['title'],
+                        int(item.select_one('._timestamp')['data-time']),
+                        item.select_one('.js-tweet-text-container').get_text(),
+                        [
+                            int(item.select('.ProfileTweet-actionCount')[0]['data-tweet-stat-count']),
+                            int(item.select('.ProfileTweet-actionCount')[1]['data-tweet-stat-count']),
+                            int(item.select('.ProfileTweet-actionCount')[2]['data-tweet-stat-count'])
+                        ],
+                    )
                 )
-            )
+            except AttributeError:
+                print('AttributeError\n')
+                continue
             print('\rFetched %s Tweets %s' % (len(self.tweets), self.tweets[-1].datetime), end='')
             if len(self.tweets) >= self.max_count:
                 print(' Done')
